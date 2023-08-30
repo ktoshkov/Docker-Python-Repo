@@ -1,20 +1,47 @@
-name: Hadolint
+name: Dockerfile Linting, Testing, and Push
 
 on: [ push, pull_request ]
 
 jobs:
-  hadolint:
-    name: Hadolint Check
+  lint-test-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Install Hadolint
-        run: |
-          wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
-          chmod +x /usr/local/bin/hadolint
+    - name: Set up Docker
+      uses: docker/setup-docker@v2
 
-      - name: Run Hadolint
-        run: hadolint Dockerfile
+    - name: Install Hadolint
+      run: |
+        wget -O hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+        chmod +x hadolint
+        sudo mv hadolint /usr/local/bin/
+
+    - name: Run Hadolint
+      run: hadolint Dockerfile
+
+    - name: Build Docker image
+      run: docker build -t hello-python-flask .
+
+    - name: Authenticate with Docker Hub
+      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Tag Docker image
+      run: docker tag hello-python-flask ${{ secrets.DOCKER_USERNAME }}/hello-python-flask:latest
+
+    - name: Push Docker image to Docker Hub
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/hello-python-flask:latest
+    - name: Run tests against the container
+      run: |
+        response=$(curl -s http://localhost:8080)
+        if [ "$response" == "Hello World!" ]; then
+          echo "Tests passed!"
+        else
+          echo "Tests failed!"
+          exit 1
+        fi
+
+    - name: Clean up
+      run: docker stop $(docker ps -q --filter ancestor=hello-python-flask) || true
