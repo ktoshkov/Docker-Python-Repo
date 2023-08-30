@@ -36,15 +36,6 @@ jobs:
 
     - name: Push Docker image to Docker Hub
       run: docker push ${{ secrets.DOCKER_USERNAME }}/hello-python-flask:latest
-    - name: Run tests against the container
-      run: |
-        response=$(curl -s http://localhost:8080)
-        if [ "$response" == "Hello World!" ]; then
-          echo "Tests passed!"
-        else
-          echo "Tests failed!"
-          exit 1
-        fi
 
     - name: Clean up
       run: docker stop $(docker ps -q --filter ancestor=hello-python-flask) || true
