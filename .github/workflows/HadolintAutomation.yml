@@ -22,7 +22,6 @@ jobs:
     - name: Build and Push Docker image
       run: |
         docker build -t ${{ secrets.DOCKER_USERNAME }}/hello-python-flask . 
-        docker tag hello-python-flask ${{ secrets.DOCKER_USERNAME }}/hello-python-flask:latest
         docker push ${{ secrets.DOCKER_USERNAME }}/hello-python-flask
 
     - name: Clean up
