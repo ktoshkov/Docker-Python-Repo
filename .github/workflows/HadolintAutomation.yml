@@ -19,21 +19,14 @@ jobs:
     - name: Run Hadolint
       run: hadolint Dockerfile
 
-    - name: Authenticate with ECR
-      run: |
-        aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws configure set default.region ${{ secrets.AWS_REGION }}
-        aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login -u AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-
     - name: Build and Push Docker image to Docker Hub and ECR
       run: |
         docker build -t ${{ secrets.DOCKER_USERNAME }}/hello-python-flask . 
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
         docker push ${{ secrets.DOCKER_USERNAME }}/hello-python-flask
         docker build -t hello-python-flask .    
-        docker tag hello-python-flask:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/docker-repo/hello-python-flask:latest
-        docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/docker-repo/hello-python-flask:latest
+        docker tag hello-python-flask:latest 716308103419.dkr.ecr.eu-central-1.amazonaws.com/docker-repo/hello-python-flask:latest
+        docker push 716308103419.dkr.ecr.eu-central-1.amazonaws.com/docker-repo/hello-python-flask:latest
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
