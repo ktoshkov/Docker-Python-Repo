@@ -30,6 +30,8 @@ jobs:
         docker build -t ${{ secrets.DOCKER_USERNAME }}/hello-python-flask . 
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
         docker push ${{ secrets.DOCKER_USERNAME }}/hello-python-flask
+        TOKEN=$(aws ecr get-login-password --region eu-central-1)
+        docker login --username AWS --password-stdin 716308103419.dkr.ecr.eu-central-1.amazonaws.com
         docker build -t hello-python-flask .    
         docker tag hello-python-flask:latest 716308103419.dkr.ecr.eu-central-1.amazonaws.com/hello-python-flask:latest
         docker push 716308103419.dkr.ecr.eu-central-1.amazonaws.com/hello-python-flask:latest
