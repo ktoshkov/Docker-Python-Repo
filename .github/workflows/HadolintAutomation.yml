@@ -19,17 +19,20 @@ jobs:
     - name: Run Hadolint
       run: hadolint Dockerfile
 
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
     - name: Build and Push Docker image to Docker Hub and ECR
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/hello-python-flask . 
-        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        docker push ${{ secrets.DOCKER_USERNAME }}/hello-python-flask
-        docker login --username AWS --password-stdin 716308103419.dkr.ecr.eu-central-1.amazonaws.com
-        TOKEN=$(aws ecr get-login-password --region eu-central-1
-        echo $TOKEN | docker login -u AWS --password-stdin 716308103419.dkr.ecr.eu-central-1.amazonaws.com
-        docker build -t hello-python-flask .  
-        docker tag hello-python-flask:latest 716308103419.dkr.ecr.eu-central-1.amazonaws.com/hello-python-flask:latest
-        docker push 716308103419.dkr.ecr.eu-central-1.amazonaws.com/hello-python-flask:latest
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          # Build and push to Docker Hub
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/hello-python-flask .
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/hello-python-flask
+          docker run --rm -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY amazon/aws-cli ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 716308103419.dkr.ecr.eu-central-1.amazonaws.com
+          docker build -t hello-python-flask .
+          docker tag hello-python-flask:latest 716308103419.dkr.ecr.eu-central-1.amazonaws.com/hello-python-flask:latest
+          docker push 716308103419.dkr.ecr.eu-central-1.amazonaws.com/hello-python-flask:latest
