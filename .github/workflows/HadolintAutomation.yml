@@ -31,8 +31,8 @@ jobs:
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
         docker push ${{ secrets.DOCKER_USERNAME }}/hello-python-flask
         docker build -t hello-python-flask .    
-        docker tag hello-python-flask:latest 716308103419.dkr.ecr.eu-central-1.amazonaws.com/docker-repo/hello-python-flask:latest
-        docker push 716308103419.dkr.ecr.eu-central-1.amazonaws.com/docker-repo/hello-python-flask:latest
+        docker tag hello-python-flask:latest 716308103419.dkr.ecr.eu-central-1.amazonaws.com/hello-python-flask:latest
+        docker push 716308103419.dkr.ecr.eu-central-1.amazonaws.com/hello-python-flask:latest
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
