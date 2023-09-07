@@ -16,7 +16,7 @@ phases:
     commands:
       - hadolint Dockerfile
       - echo "Logging into Docker Hub..."
-      - echo "$DOCKER_PASS" | docker login --username "$DOCKER_NAME" --password-stdin
+      - docker login -u "$DOCKER_NAME" -p "$DOCKER_PASS"
       - docker build -t hello-python-flask .
       - docker push "$DOCKER_NAME"/hello-python-flask
       - echo "Logging into ECR..."
