@@ -11,8 +11,9 @@ phases:
 
   build:
     commands:
+      - service docker start
       - hadolint Dockerfile
-      - docker build -t $CODEBUILD_RESOLVED_SOURCE_VERSION .
+      - docker build -t hello-python-flask .
       - echo "Logging into Docker Hub..."
       - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - docker push $DOCKER_USERNAME/hello-python-flask
