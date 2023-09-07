@@ -8,19 +8,17 @@ phases:
       - chmod +x hadolint
       - mv hadolint /usr/local/bin/
       - echo "Hadolint installed."
-      - echo "Starting Docker daemon."
-      - sudo service docker start
+      - echo "Installing Docker..."
+      - apt-get update
+      - apt-get install -y docker.io
 
   build:
     commands:
       - hadolint Dockerfile
-      - docker build -t hello-python-flask .
-
-  post_build:
-    commands:
       - echo "Logging into Docker Hub..."
-      - docker login -u $DOCKER_NAME -p $DOCKER_PASS
-      - docker push $DOCKER_NAME/hello-python-flask
+      - echo "$DOCKER_PASS" | docker login -u "$DOCKER_NAME" --password-stdin
+      - docker build -t hello-python-flask .
+      - docker push "$DOCKER_NAME"/hello-python-flask
       - echo "Logging into ECR..."
       - aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 716308103419.dkr.ecr.eu-central-1.amazonaws.com
       - docker tag hello-python-flask:latest 716308103419.dkr.ecr.eu-central-1.amazonaws.com/hello-python-flask:latest
