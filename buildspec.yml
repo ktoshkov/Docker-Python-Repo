@@ -2,7 +2,7 @@ version: 0.2
 
 phases:
   runtime-versions:
-      docker 20:
+      docker:
   pre_build:
     commands:
       - echo "Install Hadolint..."
