@@ -1,6 +1,9 @@
 version: 0.2
 
 phases:
+  install:
+    runtime-versions:
+      docker 19:
   pre_build:
     commands:
       - echo "Install Hadolint..."
@@ -8,16 +11,12 @@ phases:
       - chmod +x hadolint
       - mv hadolint /usr/local/bin/
       - echo "Hadolint installed."
-      - echo "Installing Docker..."
-      - apt-get update
-      - apt-get install -y docker.io
-      - dockerd &
 
   build:
     commands:
-      - hadolint Dockerfile
       - echo "Logging into ECR..."
       - aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 716308103419.dkr.ecr.eu-central-1.amazonaws.com
       - docker build -t hello-python-flask .
       - docker tag hello-python-flask:latest 716308103419.dkr.ecr.eu-central-1.amazonaws.com/hello-python-flask:latest
       - docker push 716308103419.dkr.ecr.eu-central-1.amazonaws.com/hello-python-flask:latest
+
