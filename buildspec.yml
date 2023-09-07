@@ -11,7 +11,6 @@ phases:
 
   build:
     commands:
-      - service docker start
       - hadolint Dockerfile
       - docker build -t hello-python-flask .
       - echo "Logging into Docker Hub..."
