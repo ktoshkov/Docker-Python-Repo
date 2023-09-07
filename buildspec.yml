@@ -2,22 +2,27 @@ version: 0.2
 
 phases:
   install:
+    runtime-versions:
+      docker: 20
+  pre_build:
     commands:
       - echo "Install Hadolint..."
       - wget -O hadolint https://github.com/hadolint/hadolint/releases/download/v2.6.0/hadolint-Linux-x86_64
       - chmod +x hadolint
-      - sudo mv hadolint /usr/local/bin/
+      - mv hadolint /usr/local/bin/
       - echo "Hadolint installed."
 
   build:
     commands:
       - hadolint Dockerfile
       - docker build -t hello-python-flask .
+
+  post_build:
+    commands:
       - echo "Logging into Docker Hub..."
       - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - docker push $DOCKER_USERNAME/hello-python-flask
       - echo "Logging into ECR..."
       - aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 716308103419.dkr.ecr.eu-central-1.amazonaws.com
-      - docker build -t hello-python-flask .
       - docker tag hello-python-flask:latest 716308103419.dkr.ecr.eu-central-1.amazonaws.com/hello-python-flask:latest
       - docker push 716308103419.dkr.ecr.eu-central-1.amazonaws.com/hello-python-flask:latest
