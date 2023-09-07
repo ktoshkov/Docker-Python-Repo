@@ -8,7 +8,7 @@ phases:
       - chmod +x hadolint
       - mv hadolint /usr/local/bin/
       - echo "Hadolint installed."
-      - echo "Starting Docker daemon..."
+      - echo "Starting Docker daemon."
       - sudo service docker start
 
   build:
