@@ -23,6 +23,8 @@ phases:
       - docker push 716308103419.dkr.ecr.eu-central-1.amazonaws.com/hello-python-flask:latest
       - echo "Using KUBECONFIG from Secrets Manager"
       - aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:eu-central-1:716308103419:secret:KUBECONFIG_SECRET-N5neCj --query SecretString --output text > /tmp/kubeconfig
-      - KUBECONFIG=/tmp/kubeconfig kubectl apply -f deployment.yaml
-      - KUBECONFIG=/tmp/kubeconfig kubectl apply -f service.yaml
+      - export KUBECONFIG=/tmp/kubeconfig  # Export KUBECONFIG so it's available to subsequent kubectl commands
+      - kubectl config use-context CI-CD-PipeLine  # Set the desired context name
+      - kubectl apply -f deployment.yaml
+      - kubectl apply -f service.yaml
 
