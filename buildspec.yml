@@ -24,6 +24,7 @@ phases:
       - docker build -t hello-python-flask .
       - docker tag hello-python-flask:latest 716308103419.dkr.ecr.eu-central-1.amazonaws.com/hello-python-flask:latest
       - docker push 716308103419.dkr.ecr.eu-central-1.amazonaws.com/hello-python-flask:latest
+      - chmod 700 ~/mykubeconfig
       - aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:eu-central-1:716308103419:secret:KUBECONFIG_SECRET-N5neCj --query SecretString --output text > ~/mykubeconfig/config
       - export KUBECONFIG=~/mykubeconfig/config
       - kubectl apply -f deployment.yaml
