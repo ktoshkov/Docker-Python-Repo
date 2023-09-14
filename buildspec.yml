@@ -26,5 +26,4 @@ phases:
       - docker push 716308103419.dkr.ecr.eu-central-1.amazonaws.com/hello-python-flask:latest
       - aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:eu-central-1:716308103419:secret:KUBECONFIG_SECRET-N5neCj --query SecretString --output text > /tmp/kubeconfig
       - export KUBECONFIG=/tmp/kubeconfig
-      - kubectl apply -f deployment.yaml --kubeconfig /tmp/kubeconfig
-      - kubectl apply -f service.yaml --kubeconfig /tmp/kubeconfig
+      - kubectl apply -f deployment.yaml -f service.yaml --kubeconfig /tmp/kubeconfig
