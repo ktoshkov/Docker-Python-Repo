@@ -27,6 +27,7 @@ phases:
       - export AWS_ACCESS_KEY_ID=AKIA2NR2KID55VKHZC5X
       - export AWS_SECRET_ACCESS_KEY=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
       - export AWS_DEFAULT_REGION=eu-central-1
-      - aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:eu-central-1:716308103419:secret:KUBECONFIG_SECRET-N5neCj --query SecretString --output text > ~/mykubeconfig/config
-      - kubectl apply -f deployment.yaml --kubeconfig ~/mykubeconfig/config
-      - kubectl apply -f service.yaml --kubeconfig ~/mykubeconfig/config
+      - aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:eu-central-1:716308103419:secret:KUBECONFIG_SECRET-N5neCj --query SecretString --output text > /home/cloudshell-user/mykubeconfig/config
+      - export KUBECONFIG=/home/cloudshell-user/mykubeconfig/config
+      - kubectl apply -f deployment.yaml
+      - kubectl apply -f service.yaml
