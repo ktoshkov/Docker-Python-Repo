@@ -27,6 +27,6 @@ phases:
       - aws eks update-kubeconfig --region eu-central-1 --name CI-CD-PipeLine --kubeconfig ~/kubeconfig
       - export KUBECONFIG=~/kubeconfig
       - cat ~/kubeconfig
-      - kubectl get nodes
-      - kubectl apply -f deployment.yaml
-      - kubectl apply -f service.yaml
+      - kubectl --kubeconfig ~/kubeconfig get nodes
+      - kubectl --kubeconfig ~/kubeconfig apply -f deployment.yaml
+      - kubectl --kubeconfig ~/kubeconfig apply -f service.yaml
