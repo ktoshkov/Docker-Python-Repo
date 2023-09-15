@@ -29,5 +29,7 @@ phases:
       - export AWS_DEFAULT_REGION=eu-central-1
       - aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:eu-central-1:716308103419:secret:KUBECONFIG_SECRET-N5neCj --query SecretString --output text > ~/kubeconfig
       - export KUBECONFIG=~/kubeconfig
+      - cat ~/kubeconfig
+      - kubectl get nodes
       - kubectl apply -f deployment.yaml
       - kubectl apply -f service.yaml
